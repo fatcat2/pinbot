@@ -1,0 +1,10 @@
+FROM python:3.7
+ENV APP_HOME /app
+WORKDIR $APP_HOME
+COPY . .
+
+RUN pip install discord.py
+
+ENV DISCORD_KEY <INSERT KEY HERE>
+ENV PIN_CHANNEL <INSERT CHANNEL HERE>
+CMD exec python bot.py
