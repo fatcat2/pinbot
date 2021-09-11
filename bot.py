@@ -20,7 +20,8 @@ class MyClient(discord.Client):
 
     async def on_reaction_add(self, reaction, user):
         print(reaction.emoji)
-        if str(reaction.emoji) == "📌":
+        pin_reacts = list(filter(lambda react: str(react) == "📌", reaction.message.reactions))
+        if str(reaction.emoji) == "📌" && len(pin_reacts) == 0:
             await self.pinz.send(
                     "> " + 
                     reaction.message.content + 
