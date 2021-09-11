@@ -5,10 +5,7 @@ import discord
 
 intents = discord.Intents(messages=True, guilds=True, reactions=True)
 
-class MyClient(discord.Client):
-    pinz = None
-
-    async def create_embed(self, message):
+def create_embed(message):
         embed_dict = {
                 "embed": {
                     "title": "it's a pin!",
@@ -20,8 +17,12 @@ class MyClient(discord.Client):
                         }
                     }
                 }
-        
-        return discord.Embed.from_dict(embed_dict)
+        embed = discord.Embed.from_dict(embed_dict)
+        print(embed)
+        return embed
+
+class MyClient(discord.Client):
+    pinz = None
 
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
@@ -39,7 +40,11 @@ class MyClient(discord.Client):
         pin_reacts = list(filter(lambda react: str(react) == "📌", reaction.message.reactions))
         print(pin_reacts)
         if str(reaction.emoji) == "📌" and len(pin_reacts) == 1:
-            await self.pinz.send(embed=create_embed(reaction.message))
+            embed_description = f"{reaction.message.author.mention} said this at [{reaction.message.created_at.strftime('%m/%d/%Y, %H:%M:%S')}]({reaction.message.jump_url})\n```{reaction.message.content}```"
+            my_embed = discord.Embed(title="It's a pin!", description=embed_description, colour=discord.Colour.from_rgb(171, 35, 48))
+            my_embed.set_footer(icon_url="https://cdn.discordapp.com/embed/avatars/0.png", text = "pinned by @guoboro")
+
+            await self.pinz.send(embed=my_embed)
 
 
 client = MyClient()
